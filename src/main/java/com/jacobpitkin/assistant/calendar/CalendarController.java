@@ -18,6 +18,11 @@ public class CalendarController {
         return "This is the calendar endpoint.";
     }
 
+    @GetMapping("/discord")
+    public String getDiscordMessage() {
+        return calendarService.getFromDiscord();
+    }
+
     @GetMapping("/service")
     public String getService() {
         return calendarService.getFromService();
