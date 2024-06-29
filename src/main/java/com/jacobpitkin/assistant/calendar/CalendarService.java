@@ -19,4 +19,8 @@ public class CalendarService {
     public String getFromService() {
         return "This message is from the calendar service.";
     }
+
+    public String postDisordMessage() {
+        return discord.postMessage();
+    }
 }

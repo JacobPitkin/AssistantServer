@@ -23,6 +23,11 @@ public class CalendarController {
         return calendarService.getFromDiscord();
     }
 
+    @GetMapping("/discord/post")
+    public String postDiscordMessage() {
+        return calendarService.postDisordMessage();
+    }
+
     @GetMapping("/service")
     public String getService() {
         return calendarService.getFromService();
