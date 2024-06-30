@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("calendar")
+@RequestMapping("/calendar")
 public class CalendarController {
     private final CalendarService calendarService;
 
@@ -13,7 +13,7 @@ public class CalendarController {
         this.calendarService = calendarService;
     }
     
-    @GetMapping("/")
+    @GetMapping
     public String index() {
         return "This is the calendar endpoint.";
     }
