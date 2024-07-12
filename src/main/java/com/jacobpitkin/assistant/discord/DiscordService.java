@@ -17,7 +17,7 @@ public class DiscordService {
     private String secret;
 
     public String getMessage() {
-        return "message from discord";
+        return "Message from DiscordService";
     }
 
     public String postMessage() {

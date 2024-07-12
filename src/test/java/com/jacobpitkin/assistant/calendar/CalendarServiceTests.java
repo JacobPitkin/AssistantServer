@@ -11,15 +11,13 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.jacobpitkin.assistant.calendar.models.Event;
-import com.jacobpitkin.assistant.discord.DiscordService;
 
 public class CalendarServiceTests {
     
     @Test
     public void testAddEvent() {
-        DiscordService discord = mock(DiscordService.class);
         Clock clock = mock(Clock.class);
-        CalendarService calendarService = new CalendarService(discord, clock);
+        CalendarService calendarService = new CalendarService(clock);
 
         Event event1 = new Event("event1", 5L);
         Event event2 = new Event("event2", 0L);
@@ -46,9 +44,8 @@ public class CalendarServiceTests {
 
     @Test
     public void testClearOldEvents() {
-        DiscordService discord = mock(DiscordService.class);
         Clock clock = mock(Clock.class);
-        CalendarService calendarService = new CalendarService(discord, clock);
+        CalendarService calendarService = new CalendarService(clock);
 
         long ONE_MONTH_MILLIS = 1000 * 60 * 60 * 24 * 30L;
 

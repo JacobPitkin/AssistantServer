@@ -16,10 +16,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController("/discord")
 public class DiscordController {
+    private final DiscordService discordService;
+
+    public DiscordController(DiscordService discordService) {
+        this.discordService = discordService;
+    }
 
     @GetMapping
     public String getDiscordMessage() {
-        return "Message from Discord endpoint";
+        return discordService.getMessage();
     }
     
     // TODO: Make sure this follows the correct standards here https://discord.com/developers/docs/interactions/overview#setting-up-an-endpoint-acknowledging-ping-requests

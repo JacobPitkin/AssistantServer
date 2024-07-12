@@ -19,7 +19,7 @@ public class CalendarController {
     
     @GetMapping
     public String index() {
-        return "This is the calendar endpoint.";
+        return calendarService.getMessage();
     }
 
     @GetMapping("/events")

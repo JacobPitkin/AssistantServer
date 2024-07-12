@@ -6,18 +6,15 @@ import java.util.TreeMap;
 import org.springframework.stereotype.Service;
 
 import com.jacobpitkin.assistant.calendar.models.Event;
-import com.jacobpitkin.assistant.discord.DiscordService;
 
 @Service
 public class CalendarService {
-    private final DiscordService discord;
     private final Clock clock;
     private TreeMap<Long, Event> events;
 
     private final long ONE_MONTH_MILLIS = 1000 * 60 * 60 * 24 * 30L;
 
-    public CalendarService(DiscordService discord, Clock clock) {
-        this.discord = discord;
+    public CalendarService(Clock clock) {
         this.clock = clock;
         events = new TreeMap<>();
     }
@@ -44,5 +41,9 @@ public class CalendarService {
         while (!events.isEmpty() && events.firstKey() < clock.millis() - ONE_MONTH_MILLIS) {
             events.pollFirstEntry();
         }
+    }
+
+    public String getMessage() {
+        return "Message from CalendarService";
     }
 }
