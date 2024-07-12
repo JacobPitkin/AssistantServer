@@ -1,8 +1,12 @@
 package com.jacobpitkin.assistant.calendar;
 
+import java.util.TreeMap;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.jacobpitkin.assistant.calendar.models.Event;
 
 @RestController
 @RequestMapping("/calendar")
@@ -18,18 +22,8 @@ public class CalendarController {
         return "This is the calendar endpoint.";
     }
 
-    @GetMapping("/discord")
-    public String getDiscordMessage() {
-        return calendarService.getFromDiscord();
-    }
-
-    @GetMapping("/discord/post")
-    public String postDiscordMessage() {
-        return calendarService.postDisordMessage();
-    }
-
-    @GetMapping("/service")
-    public String getService() {
-        return calendarService.getFromService();
+    @GetMapping("/events")
+    public TreeMap<Long, Event> getEvents() {
+        return calendarService.getEvents();
     }
 }

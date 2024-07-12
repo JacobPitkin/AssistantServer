@@ -32,21 +32,17 @@ public class CalendarService {
         return ret;
     }
 
+    public Event removeEvent(long id) {
+        return events.remove(id);
+    }
+
+    public Event removeEvent(Event event) {
+        return events.remove(event.startTime());
+    }
+
     public void clearOldEvents() {
         while (!events.isEmpty() && events.firstKey() < clock.millis() - ONE_MONTH_MILLIS) {
             events.pollFirstEntry();
         }
-    }
-
-    public String getFromDiscord() {
-        return discord.getMessage();
-    }
-
-    public String getFromService() {
-        return "This message is from the calendar service.";
-    }
-
-    public String postDisordMessage() {
-        return discord.postMessage();
     }
 }

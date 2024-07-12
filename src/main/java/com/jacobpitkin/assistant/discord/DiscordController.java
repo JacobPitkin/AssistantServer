@@ -10,12 +10,17 @@ import java.security.SignatureException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController("/discord")
 public class DiscordController {
+
+    @GetMapping
+    public String getDiscordMessage() {
+        return "Message from Discord endpoint";
+    }
     
     // TODO: Make sure this follows the correct standards here https://discord.com/developers/docs/interactions/overview#setting-up-an-endpoint-acknowledging-ping-requests
     @PostMapping("/ping")
