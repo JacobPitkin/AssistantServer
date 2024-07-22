@@ -1,6 +1,8 @@
 package com.jacobpitkin.assistant.calendar;
 
 import java.time.Clock;
+import java.util.Collections;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import org.springframework.stereotype.Service;
@@ -10,36 +12,55 @@ import com.jacobpitkin.assistant.calendar.models.Event;
 @Service
 public class CalendarService {
     private final Clock clock;
-    private TreeMap<Long, Event> events;
+    private TreeMap<Long, Event> upcomingEvents;
+    private TreeMap<Long, Event> pastEvents;
 
     private final long ONE_MONTH_MILLIS = 1000 * 60 * 60 * 24 * 30L;
 
     public CalendarService(Clock clock) {
         this.clock = clock;
-        events = new TreeMap<>();
+        upcomingEvents = new TreeMap<>();
+        pastEvents = new TreeMap<>(Collections.reverseOrder());
     }
 
     public synchronized void addEvent(Event event) {
         long startTime = event.startTime();
-        events.put(startTime, event);
+        long now = clock.millis();
+
+        if (startTime > now) {
+            upcomingEvents.put(startTime, event);
+        } else {
+            pastEvents.put(startTime, event);
+        }
     }
 
-    public TreeMap<Long, Event> getEvents() {
-        TreeMap<Long, Event> ret = new TreeMap<>(events);
+    public synchronized TreeMap<Long, Event> getUpcomingEvents() {
+        TreeMap<Long, Event> ret = new TreeMap<>(upcomingEvents);
         return ret;
     }
 
-    public Event removeEvent(long id) {
-        return events.remove(id);
+    public synchronized Event removeEvent(long id) {
+        long now = clock.millis();
+
+        if (id < now) {
+            return pastEvents.remove(id);
+        }
+
+        return upcomingEvents.remove(id);
     }
 
-    public Event removeEvent(Event event) {
-        return events.remove(event.startTime());
+    public synchronized Event removeEvent(Event event) {
+        long startTime = event.startTime();
+        return removeEvent(startTime);
     }
 
-    public void clearOldEvents() {
-        while (!events.isEmpty() && events.firstKey() < clock.millis() - ONE_MONTH_MILLIS) {
-            events.pollFirstEntry();
+    private synchronized void clearOldEvents() {
+        long now = clock.millis();
+
+        while (upcomingEvents.firstKey() < now) {
+            Entry<Long, Event> entry = upcomingEvents.firstEntry();
+            upcomingEvents.remove(entry.getKey());
+            pastEvents.put(entry.getKey(), entry.getValue());
         }
     }
 

@@ -24,6 +24,6 @@ public class CalendarController {
 
     @GetMapping("/events")
     public TreeMap<Long, Event> getEvents() {
-        return calendarService.getEvents();
+        return calendarService.getUpcomingEvents();
     }
 }
