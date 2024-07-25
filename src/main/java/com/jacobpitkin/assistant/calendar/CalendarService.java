@@ -5,17 +5,19 @@ import java.util.Collections;
 import java.util.Map.Entry;
 import java.util.TreeMap;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import com.jacobpitkin.assistant.calendar.models.Event;
 
 @Service
 public class CalendarService {
+    private final static Logger LOG = LogManager.getLogger();
     private final Clock clock;
     private TreeMap<Long, Event> upcomingEvents;
     private TreeMap<Long, Event> pastEvents;
-
-    private final long ONE_MONTH_MILLIS = 1000 * 60 * 60 * 24 * 30L;
 
     public CalendarService(Clock clock) {
         this.clock = clock;
@@ -54,6 +56,28 @@ public class CalendarService {
         return removeEvent(startTime);
     }
 
+    public void updateEvent(long id, Event event) {
+        long now = clock.millis();
+        long updatedStartTime = event.startTime();
+        
+        if (id == updatedStartTime) {
+            if (id < now) {
+                pastEvents.put(id, event);
+            } else {
+                upcomingEvents.put(id, event);
+            }
+        } else {
+            pastEvents.remove(id);
+            upcomingEvents.remove(id);
+
+            if (updatedStartTime < now) {
+                pastEvents.put(updatedStartTime, event);
+            } else {
+                upcomingEvents.put(updatedStartTime, event);
+            }
+        }
+    }
+
     private synchronized void clearOldEvents() {
         long now = clock.millis();
 
@@ -66,5 +90,10 @@ public class CalendarService {
 
     public String getMessage() {
         return "Message from CalendarService";
+    }
+
+    @Scheduled(cron = "* * * * *")
+    public void pulse() {
+        LOG.info("[Calendar] pulse");
     }
 }
