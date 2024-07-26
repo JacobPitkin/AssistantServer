@@ -36,6 +36,11 @@ public class CalendarService {
         }
     }
 
+    public synchronized TreeMap<Long, Event> getPastEvents() {
+        TreeMap<Long, Event> ret = new TreeMap<>(pastEvents);
+        return ret;
+    }
+
     public synchronized TreeMap<Long, Event> getUpcomingEvents() {
         TreeMap<Long, Event> ret = new TreeMap<>(upcomingEvents);
         return ret;

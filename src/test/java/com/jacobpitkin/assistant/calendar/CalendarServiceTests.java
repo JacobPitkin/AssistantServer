@@ -17,14 +17,15 @@ public class CalendarServiceTests {
     @Test
     public void testAddEvent() {
         Clock clock = mock(Clock.class);
+        when(clock.millis()).thenReturn(0L);
         CalendarService calendarService = new CalendarService(clock);
 
-        Event event1 = new Event("event1", 5L);
-        Event event2 = new Event("event2", 0L);
-        Event event3 = new Event("event3", 1L);
-        Event event4 = new Event("event4", 3L);
-        Event event5 = new Event("event5", 2L);
-        Event event6 = new Event("event6", 4L);
+        Event event1 = new Event("event1", 6L);
+        Event event2 = new Event("event2", 1L);
+        Event event3 = new Event("event3", 2L);
+        Event event4 = new Event("event4", 4L);
+        Event event5 = new Event("event5", 3L);
+        Event event6 = new Event("event6", 5L);
 
         calendarService.addEvent(event1);
         calendarService.addEvent(event2);
@@ -34,9 +35,11 @@ public class CalendarServiceTests {
         calendarService.addEvent(event6);
 
         TreeMap<Long, Event> events = calendarService.getUpcomingEvents();
+        TreeMap<Long, Event> pastEvents = calendarService.getPastEvents();
+        Assertions.assertEquals(0, pastEvents.size());
         Assertions.assertEquals("event2", events.firstEntry().getValue().title());
 
-        long counter = 0L;
+        long counter = 1L;
         for (Entry<Long, Event> entry : events.sequencedEntrySet()) {
             Assertions.assertEquals(counter++, entry.getKey());
         }
